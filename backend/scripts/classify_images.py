@@ -55,11 +55,30 @@ def get_image_info(filepath: Path) -> dict | None:
         return None
 
 
-def assign_emotion() -> str:
-    """Assign an emotion category based on weighted random distribution."""
-    emotions = list(EMOTION_WEIGHTS.keys())
-    weights = list(EMOTION_WEIGHTS.values())
-    return random.choices(emotions, weights=weights, k=1)[0]
+def assign_emotion(img_path: Path) -> str:
+    """Assign an emotion category using DeepFace."""
+    try:
+        from deepface import DeepFace
+        results = DeepFace.analyze(
+            img_path=str(img_path),
+            actions=["emotion"],
+            enforce_detection=False,
+            silent=True,
+        )
+        if isinstance(results, list):
+            result = results[0]
+        else:
+            result = results
+        
+        emotion = result.get("dominant_emotion", "neutral")
+        if emotion in EMOTIONS:
+            return emotion
+        return "neutral"
+    except Exception as e:
+        logger.warning(f"Failed to analyze {img_path}: {e}")
+        emotions = list(EMOTION_WEIGHTS.keys())
+        weights = list(EMOTION_WEIGHTS.values())
+        return random.choices(emotions, weights=weights, k=1)[0]
 
 
 def classify_images(source_dir: str, output_dir: str | None = None):
@@ -112,7 +131,7 @@ def classify_images(source_dir: str, output_dir: str | None = None):
             continue
 
         # Assign emotion category
-        emotion = assign_emotion()
+        emotion = assign_emotion(img_path)
 
         # Create new filename
         new_filename = f"cat_{emotion}_{classified_count + 1:04d}{img_path.suffix.lower()}"
@@ -138,6 +157,10 @@ def classify_images(source_dir: str, output_dir: str | None = None):
 
         if (classified_count) % 50 == 0:
             logger.info(f"Classified {classified_count} images...")
+            
+        if classified_count >= 150:
+            logger.info("Reached 150 images, stopping classification.")
+            break
 
     # Save metadata
     metadata_path = output.parent / "metadata.json"
