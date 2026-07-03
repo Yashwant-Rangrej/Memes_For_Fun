@@ -26,8 +26,9 @@ export function ImageCard({
 }: ImageCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-  const imageUrl = `${apiBase}${url}`;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
+  const imageUrl = `${baseUrl}${url}`;
 
   const handleDownload = async () => {
     try {
