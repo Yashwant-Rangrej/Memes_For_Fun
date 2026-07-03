@@ -49,21 +49,23 @@ cd Memes_For_Fun
 ```
 
 ### 2. Backend Setup
-Navigate to the `backend` directory and set up the Python environment:
+Navigate to the `backend` directory and set up the Python environment. Choose the command block for your operating system:
+
+**Windows:**
 ```bash
 cd backend
-
-# Create and activate virtual environment
 python -m venv venv
-# On Windows:
 venv\Scripts\activate
-# On macOS/Linux:
-# source venv/bin/activate
-
-# Install required dependencies
 pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
 
-# Start the FastAPI server (runs on http://localhost:8000)
+**macOS/Linux:**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -71,24 +73,17 @@ uvicorn app.main:app --reload --port 8000
 Open a new terminal window, navigate to the `frontend` directory, and start the Next.js app:
 ```bash
 cd frontend
-
-# Install Node.js dependencies
 npm install
-
-# Start the development server (runs on http://localhost:3000)
 npm run dev
 ```
 
 ### 4. Dataset Configuration
 To populate the app with your own cat images:
 1. Place your raw cat images in a designated folder.
-2. Run the classification script to organize them by emotion:
+2. Run the classification script to organize them by emotion and seed the database:
    ```bash
    cd backend
    python -m scripts.classify_images --source /path/to/your/cat/images
-   ```
-3. Seed the SQLite database with the classified images:
-   ```bash
    python -m scripts.seed_database
    ```
 
