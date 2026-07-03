@@ -23,12 +23,12 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col items-center justify-center gap-6">
-            <div className="flex items-center justify-center gap-3">
-              <Link href="/camera">
-                <Button size="lg">Start Camera</Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
+              <Link href="/camera" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto">Start Camera</Button>
               </Link>
-              <Link href="/favorites">
-                <Button variant="secondary" size="lg">
+              <Link href="/favorites" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto">
                   View Favorites
                 </Button>
               </Link>
@@ -40,15 +40,15 @@ export default function HomePage() {
               <div className="h-px bg-border flex-1"></div>
             </div>
 
-            <form action="/recommendations" method="GET" className="flex w-full max-w-sm gap-2">
+            <form action="/recommendations" method="GET" className="flex flex-col sm:flex-row w-full max-w-sm gap-2">
               <input 
                 type="text" 
                 name="emotion" 
                 placeholder="Type your mood (e.g., happy, tired, excited)..." 
-                className="flex-1 px-4 py-3 bg-card border border-border rounded-[var(--radius-button)] text-sm text-foreground focus:outline-none focus:border-button transition-colors"
+                className="w-full sm:flex-1 px-4 py-3 bg-card border border-border rounded-[var(--radius-button)] text-sm text-foreground focus:outline-none focus:border-button transition-colors"
                 required
               />
-              <Button type="submit" size="md">Get Memes</Button>
+              <Button type="submit" size="md" className="w-full sm:w-auto">Get Memes</Button>
             </form>
           </div>
         </div>

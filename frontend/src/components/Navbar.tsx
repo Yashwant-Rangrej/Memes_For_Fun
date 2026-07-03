@@ -18,7 +18,7 @@ export function Navbar() {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="container-app flex items-center justify-between h-16">
+      <div className="container-app flex flex-col sm:flex-row items-center justify-between py-4 sm:py-0 sm:h-16 gap-4 sm:gap-0">
         {/* Brand */}
         <Link
           href="/"
@@ -28,7 +28,7 @@ export function Navbar() {
         </Link>
 
         {/* Navigation links */}
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap justify-center items-center gap-1">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (

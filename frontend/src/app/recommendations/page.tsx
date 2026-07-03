@@ -97,12 +97,12 @@ function RecommendationsContent() {
           />
 
           {/* Actions */}
-          <div className="flex items-center justify-center gap-3 mt-10">
-            <Button onClick={handleRefresh} variant="secondary" size="lg">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10 w-full">
+            <Button onClick={handleRefresh} variant="secondary" size="lg" className="w-full sm:w-auto">
               ↻ Refresh
             </Button>
-            <Link href="/camera">
-              <Button size="lg">← Try Again</Button>
+            <Link href="/camera" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto">← Try Again</Button>
             </Link>
           </div>
         </>

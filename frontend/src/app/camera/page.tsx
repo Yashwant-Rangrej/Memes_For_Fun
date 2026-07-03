@@ -114,19 +114,19 @@ export default function CameraPage() {
         )}
 
         {/* Action buttons */}
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           {isReady && !result && !isLoading && (
-            <Button onClick={handleCapture} size="lg">
+            <Button onClick={handleCapture} size="lg" className="w-full sm:w-auto">
               Capture &amp; Detect
             </Button>
           )}
 
           {result && (
             <>
-              <Button onClick={handleViewRecommendations} size="lg">
+              <Button onClick={handleViewRecommendations} size="lg" className="w-full sm:w-auto">
                 View Cat Reactions →
               </Button>
-              <Button variant="secondary" size="lg" onClick={handleRetry}>
+              <Button variant="secondary" size="lg" onClick={handleRetry} className="w-full sm:w-auto">
                 Try Again
               </Button>
             </>
