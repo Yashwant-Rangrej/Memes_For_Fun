@@ -10,7 +10,20 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
+class CORSStaticFiles(StaticFiles):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    async def __call__(self, scope, receive, send):
+        async def respond(message):
+            if message["type"] == "http.response.start":
+                headers = message.setdefault("headers", [])
+                headers.append((b"access-control-allow-origin", b"*"))
+            await send(message)
+        await super().__call__(scope, receive, respond)
 
 from app.api import emotion, favorites, health, recommendation
 from app.core.config import settings
@@ -37,7 +50,7 @@ async def lifespan(app: FastAPI):
     if dataset_path.exists():
         app.mount(
             "/dataset/images",
-            StaticFiles(directory=str(dataset_path)),
+            CORSStaticFiles(directory=str(dataset_path)),
             name="dataset_images",
         )
         logger.info(f"Serving dataset images from: {dataset_path}")
@@ -52,7 +65,7 @@ async def lifespan(app: FastAPI):
         logger.info(f"Created dataset directory structure at: {dataset_path}")
         app.mount(
             "/dataset/images",
-            StaticFiles(directory=str(dataset_path)),
+            CORSStaticFiles(directory=str(dataset_path)),
             name="dataset_images",
         )
 

@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     DATASET_PATH: str = "dataset/images"
     HOST: str = "0.0.0.0"
     PORT: int = 8000
-    CORS_ORIGINS: str = "http://localhost:3000"
+    CORS_ORIGINS: str = "*"
 
     @property
     def cors_origins_list(self) -> list[str]:
