@@ -66,8 +66,8 @@ function RecommendationsContent() {
       <div className="text-center mb-10">
         <span className="text-4xl mb-2 block">{emoji}</span>
         <h1 className="text-2xl font-bold text-foreground mb-2">
-          You look{" "}
-          <span className="capitalize">{emotion}</span>
+          Feeling{" "}
+          <span className="capitalize">{emotion}</span>?
         </h1>
         <p className="text-sm text-secondary">
           Here are your matching cat reactions

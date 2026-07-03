@@ -22,15 +22,34 @@ export default function HomePage() {
             recommends the funniest cat reaction images to match.
           </p>
 
-          <div className="flex items-center justify-center gap-3">
-            <Link href="/camera">
-              <Button size="lg">Start Camera</Button>
-            </Link>
-            <Link href="/favorites">
-              <Button variant="secondary" size="lg">
-                View Favorites
-              </Button>
-            </Link>
+          <div className="flex flex-col items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-3">
+              <Link href="/camera">
+                <Button size="lg">Start Camera</Button>
+              </Link>
+              <Link href="/favorites">
+                <Button variant="secondary" size="lg">
+                  View Favorites
+                </Button>
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-4 w-full max-w-xs opacity-60">
+              <div className="h-px bg-border flex-1"></div>
+              <span className="text-secondary text-xs font-medium uppercase tracking-wider">OR</span>
+              <div className="h-px bg-border flex-1"></div>
+            </div>
+
+            <form action="/recommendations" method="GET" className="flex w-full max-w-sm gap-2">
+              <input 
+                type="text" 
+                name="emotion" 
+                placeholder="Type your mood (e.g., happy, tired, excited)..." 
+                className="flex-1 px-4 py-3 bg-card border border-border rounded-[var(--radius-button)] text-sm text-foreground focus:outline-none focus:border-button transition-colors"
+                required
+              />
+              <Button type="submit" size="md">Get Memes</Button>
+            </form>
           </div>
         </div>
       </section>
