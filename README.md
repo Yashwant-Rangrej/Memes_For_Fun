@@ -1,130 +1,137 @@
-# 🐱 CatMood
-
-**AI-Powered Funny Cat Reaction Recommendation System**
-
-> Detect facial emotions in real-time through a webcam and instantly recommend the funniest cat reaction images.
+<div align="center">
+  <h1>🐱 CatMood</h1>
+  <p><strong>AI-Powered Funny Cat Reaction Recommendation System</strong></p>
+  <p><em>Developed by Yashwant Rangrej</em></p>
+  <p>
+    Detect facial emotions in real-time through your webcam and instantly get the funniest matching cat reactions.
+  </p>
+  
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#tech-stack">Tech Stack</a> •
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#api-reference">API Reference</a>
+  </p>
+</div>
 
 ---
 
-## Tech Stack
+## ✨ Features
 
-| Layer     | Technology                          |
-| --------- | ----------------------------------- |
-| Frontend  | Next.js 15, TypeScript, Tailwind CSS |
-| Backend   | FastAPI (Python)                    |
-| AI        | DeepFace, MediaPipe                 |
-| Database  | SQLite                              |
+- **Real-Time Emotion Detection:** Analyzes facial expressions instantly using DeepFace & MediaPipe.
+- **Smart Recommendations:** Recommends hand-picked funny cat images matching your current mood.
+- **Save Favorites:** Easily favorite and manage your top cat reactions.
+- **Modern UI/UX:** Clean, responsive, and beautiful interface built with Next.js 15 and Tailwind CSS.
+- **Robust API:** Fast and reliable backend using FastAPI (Python).
 
----
+## 🛠️ Tech Stack
 
-## Getting Started
+| Layer      | Technology                          |
+| ---------- | ----------------------------------- |
+| **Frontend** | Next.js 15, React, TypeScript, Tailwind CSS |
+| **Backend**  | FastAPI, Python 3.10+               |
+| **AI/ML**    | DeepFace, MediaPipe                 |
+| **Database** | SQLite, SQLAlchemy, Pydantic        |
+
+## 🚀 Getting Started
+
+Follow these steps to set up CatMood on your local machine.
 
 ### Prerequisites
-
-- Python 3.10+
-- Node.js 18+
-- npm
+- [Node.js](https://nodejs.org/) (v18+)
+- [Python](https://www.python.org/) (v3.10+)
+- [Git](https://git-scm.com/)
 
 ### 1. Clone the repository
-
 ```bash
 git clone <repo-url>
 cd Memes_For_Fun
 ```
 
 ### 2. Backend Setup
-
+Navigate to the `backend` directory and set up the Python environment:
 ```bash
 cd backend
 
-# Create virtual environment
+# Create and activate virtual environment
 python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # macOS/Linux
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+# source venv/bin/activate
 
-# Install dependencies
+# Install required dependencies
 pip install -r requirements.txt
 
-# Start the server
+# Start the FastAPI server (runs on http://localhost:8000)
 uvicorn app.main:app --reload --port 8000
 ```
 
 ### 3. Frontend Setup
-
+Open a new terminal window, navigate to the `frontend` directory, and start the Next.js app:
 ```bash
 cd frontend
 
-# Install dependencies
+# Install Node.js dependencies
 npm install
 
-# Start dev server
+# Start the development server (runs on http://localhost:3000)
 npm run dev
 ```
 
-### 4. Dataset Setup
+### 4. Dataset Configuration
+To populate the app with your own cat images:
+1. Place your raw cat images in a designated folder.
+2. Run the classification script to organize them by emotion:
+   ```bash
+   cd backend
+   python -m scripts.classify_images --source /path/to/your/cat/images
+   ```
+3. Seed the SQLite database with the classified images:
+   ```bash
+   python -m scripts.seed_database
+   ```
 
-1. Place your cat images in a folder (e.g., `raw_cats/`)
-2. Classify them into emotion categories:
+## 📁 Project Structure
 
-```bash
-cd backend
-python -m scripts.classify_images --source /path/to/your/cat/images
-```
-
-3. Seed the database:
-
-```bash
-python -m scripts.seed_database
-```
-
----
-
-## Project Structure
-
-```
+```text
 Memes_For_Fun/
-├── backend/
+├── backend/                  # FastAPI Application
 │   ├── app/
-│   │   ├── api/          # FastAPI routes
-│   │   ├── core/         # Config, database
-│   │   ├── models/       # SQLAlchemy models
-│   │   ├── schemas/      # Pydantic schemas
-│   │   └── services/     # Business logic
-│   ├── dataset/          # Cat images (by emotion)
-│   ├── scripts/          # Setup scripts
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── app/          # Next.js pages
-│   │   ├── components/   # React components
-│   │   ├── hooks/        # Custom hooks
-│   │   ├── services/     # API client
-│   │   └── types/        # TypeScript types
-│   └── package.json
-└── README.md
+│   │   ├── api/              # Route endpoints
+│   │   ├── core/             # Configuration & DB setup
+│   │   ├── models/           # SQLAlchemy database models
+│   │   ├── schemas/          # Pydantic validation schemas
+│   │   └── services/         # Core business logic
+│   ├── dataset/              # Classified cat images
+│   └── scripts/              # Setup and seeding scripts
+└── frontend/                 # Next.js Application
+    ├── public/               # Static assets
+    └── src/
+        ├── app/              # App router pages
+        ├── components/       # Reusable React components
+        ├── hooks/            # Custom React hooks
+        └── types/            # TypeScript definitions
 ```
 
----
+## 🌐 API Reference
 
-## API Endpoints
+The backend API is documented automatically. Once running, visit `http://localhost:8000/docs` for the Swagger UI.
 
-| Method | Endpoint                | Description              |
-| ------ | ----------------------- | ------------------------ |
-| POST   | `/api/v1/emotion/detect` | Detect emotion from image |
-| GET    | `/api/v1/recommendations` | Get cat image recs       |
-| GET    | `/api/v1/favorites`      | List favorites           |
-| POST   | `/api/v1/favorites`      | Add favorite             |
-| DELETE | `/api/v1/favorites/{id}` | Remove favorite          |
-| GET    | `/api/v1/health`         | Health check             |
+| Method | Endpoint                    | Description                           |
+| ------ | --------------------------- | ------------------------------------- |
+| POST   | `/api/v1/emotion/detect`    | Detects emotion from a provided image |
+| GET    | `/api/v1/recommendations`   | Fetches cat image recommendations     |
+| GET    | `/api/v1/favorites`         | Lists user's saved favorite images    |
+| POST   | `/api/v1/favorites`         | Adds a new image to favorites         |
+| DELETE | `/api/v1/favorites/{id}`    | Removes an image from favorites       |
+| GET    | `/api/v1/health`            | Health check endpoint                 |
 
----
+## 🎭 Supported Emotions
 
-## Supported Emotions
+The system currently detects and categorizes the following facial expressions:
+**😊 Happy** • **😢 Sad** • **😠 Angry** • **😨 Fear** • **😐 Neutral** • **😲 Surprise** • **🤢 Disgust**
 
-😊 Happy · 😢 Sad · 😠 Angry · 😨 Fear · 😐 Neutral · 😲 Surprise · 🤢 Disgust
+## 📄 License
 
----
-
-## License
-
-Educational and portfolio purposes. Verify dataset licensing before redistribution.
+This project is created for educational and portfolio purposes. Please ensure you verify dataset licensing before any redistribution or commercial use.
