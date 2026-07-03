@@ -1,0 +1,1 @@
+"""CatMood Backend Application."""
