@@ -47,6 +47,69 @@ export function ImageCard({
     }
   };
 
+  const handleShareWhatsAppSticker = async () => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      
+      const img = new window.Image();
+      const objectUrl = window.URL.createObjectURL(blob);
+      img.src = objectUrl;
+      
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+      
+      if (ctx) {
+        ctx.clearRect(0, 0, 512, 512);
+        
+        const scale = Math.min(512 / img.width, 512 / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        const x = (512 - w) / 2;
+        const y = (512 - h) / 2;
+        
+        ctx.drawImage(img, x, y, w, h);
+        
+        canvas.toBlob(async (webpBlob) => {
+          if (webpBlob) {
+            const file = new File([webpBlob], `${emotion}_sticker.webp`, { type: "image/webp" });
+            
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              try {
+                await navigator.share({
+                  title: `${emotion} sticker`,
+                  files: [file],
+                });
+              } catch (shareErr) {
+                console.error("Error sharing:", shareErr);
+              }
+            } else {
+              const downloadUrl = window.URL.createObjectURL(webpBlob);
+              const link = document.createElement("a");
+              link.href = downloadUrl;
+              link.download = `${emotion}_sticker.webp`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              window.URL.revokeObjectURL(downloadUrl);
+              alert("Sticker downloaded! You can now send it in WhatsApp.");
+            }
+          }
+        }, "image/webp");
+      }
+      
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Failed to process sticker:", err);
+    }
+  };
+
   const handleFavoriteToggle = () => {
     if (isFavorited && onUnfavorite && favoriteId) {
       onUnfavorite(favoriteId);
@@ -95,25 +158,36 @@ export function ImageCard({
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleDownload}
+              className="flex-1"
+              aria-label={`Download ${filename}`}
+            >
+              ↓ Download
+            </Button>
+            <Button
+              variant={isFavorited ? "danger" : "secondary"}
+              size="sm"
+              onClick={handleFavoriteToggle}
+              aria-label={
+                isFavorited ? "Remove from favorites" : "Add to favorites"
+              }
+            >
+              {isFavorited ? "♥" : "♡"}
+            </Button>
+          </div>
           <Button
             variant="secondary"
             size="sm"
-            onClick={handleDownload}
-            className="flex-1"
-            aria-label={`Download ${filename}`}
+            onClick={handleShareWhatsAppSticker}
+            className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white border-transparent"
+            aria-label="Share as WhatsApp Sticker"
           >
-            ↓ Download
-          </Button>
-          <Button
-            variant={isFavorited ? "danger" : "secondary"}
-            size="sm"
-            onClick={handleFavoriteToggle}
-            aria-label={
-              isFavorited ? "Remove from favorites" : "Add to favorites"
-            }
-          >
-            {isFavorited ? "♥" : "♡"}
+            Share as WA Sticker
           </Button>
         </div>
       </div>
