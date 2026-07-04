@@ -57,7 +57,7 @@ def detect_emotion(base64_image: str) -> dict:
             img_path=img,
             actions=["emotion"],
             enforce_detection=True,
-            detector_backend="opencv",
+            detector_backend="ssd",
             silent=True,
         )
     except ValueError as e:
