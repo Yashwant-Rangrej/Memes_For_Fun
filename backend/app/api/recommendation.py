@@ -1,11 +1,11 @@
 """Recommendation API route."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.schemas.recommend import RecommendationResponse
-from app.services.recommend_service import get_recommendations
+from app.services.recommend_service import get_recommendations, get_similar_images
 
 router = APIRouter(prefix="/recommendations", tags=["Recommendations"])
 
@@ -37,6 +37,30 @@ async def get_recommendations_endpoint(
 
     return RecommendationResponse(
         emotion=emotion,
+        total=len(images),
+        images=images,
+    )
+
+
+@router.get(
+    "/{image_id}/similar",
+    response_model=RecommendationResponse,
+    summary="Get similar images",
+    description="Returns funny cat images similar to the specified image.",
+)
+async def get_similar_images_endpoint(
+    image_id: int,
+    limit: int = Query(5, ge=1, le=20, description="Maximum number of similar images to return"),
+    db: Session = Depends(get_db),
+):
+    """Get cat image recommendations similar to a specific image."""
+    images, target_emotion = get_similar_images(db, image_id, limit)
+    
+    if target_emotion is None:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return RecommendationResponse(
+        emotion=target_emotion,
         total=len(images),
         images=images,
     )

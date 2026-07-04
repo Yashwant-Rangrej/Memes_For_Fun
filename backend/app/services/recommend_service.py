@@ -63,3 +63,59 @@ def get_recommendations(
         }
         for img in selected
     ]
+
+
+def get_similar_images(
+    db: Session,
+    image_id: int,
+    limit: int = 5,
+) -> tuple[list[dict], str | None]:
+    """Get similar images based on an image ID.
+    
+    Args:
+        db: Database session.
+        image_id: The ID of the target image.
+        limit: Number of similar images to return.
+        
+    Returns:
+        A tuple of (list of similar images, target image emotion).
+        If the target image is not found, returns ([], None).
+    """
+    target_image = db.query(Image).filter(Image.id == image_id).first()
+    if not target_image:
+        return [], None
+        
+    target_emotion = target_image.emotion
+
+    query = db.query(Image).filter(
+        Image.emotion == target_emotion,
+        Image.id != image_id
+    )
+
+    similar_images = query.all()
+
+    # If we don't have enough similar images of the same emotion, supplement with neutral
+    if len(similar_images) < limit and target_emotion != "neutral":
+        remaining = limit - len(similar_images)
+        neutral_query = db.query(Image).filter(
+            Image.emotion == "neutral",
+            Image.id != image_id
+        )
+        neutral_images = neutral_query.all()
+        similar_images.extend(neutral_images[:remaining])
+
+    # Shuffle for variety
+    random.shuffle(similar_images)
+
+    # Take top N
+    selected = similar_images[:limit]
+
+    return [
+        {
+            "id": img.id,
+            "filename": img.filename,
+            "emotion": img.emotion,
+            "url": f"/dataset/images/{img.emotion}/{img.filename}",
+        }
+        for img in selected
+    ], target_emotion
