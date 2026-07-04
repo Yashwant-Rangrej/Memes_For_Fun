@@ -22,8 +22,8 @@ env/
 *.db
 *.sqlite3
 
-# Dataset images (too large for git)
-backend/dataset/images/
+# Dataset images
+# Removed from gitignore because the 29MB dataset fits easily in GitHub and needs to be deployed to Render.
 
 # IDE
 .vscode/
